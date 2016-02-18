@@ -376,27 +376,15 @@ function LineChartInit() {
     }
 
     $('#line-name-select').change(function () {
-      // alert($(this).val());
       $('#line-name').val($(this).val()).trigger(jQuery.Event('keyup', {which: 13}));
-      // $('#line-name').val($(this).val() + String.fromCharCode(13)).keyup();
     });
 
-    // startDate = $('.line-from').val();
     $('.line-from').change(function() {
-      // startDate = $(this).val();
-      // $('.line-from').each(function() {
-        // $(this).attr('value', startDate);
-      // });
       lineClear();
       xAxisChange();
     });
 
-    // endDate = new Date().toISOString().slice(0,10);//.replace(/-/g,"");;
     $('.line-to').change(function() {
-      // endDate = $(this).val();
-      // $('.line-to').each(function() {
-        // $(this).attr('value', endDate);
-      // });
       lineClear();
       xAxisChange();
     });
@@ -508,13 +496,11 @@ function LineChartInit() {
                             .attr("fill", "none")
                             .on("mouseover", function() {
                                 d3.select('path#' + name.replace(' ', '-')).attr("stroke-width", 6);
-                                // $('#' + name.replace(' ', '-') + '-display').css({'width': '50%', 'left':'25%'});
                                 tooltip.style('display', '');
                                 tooltip.html(name).style('left', (d3.event.pageX + 3) + 'px').style('top', (d3.event.pageY) + 'px');
                             })
                             .on("mouseout", function() {
                                d3.select('path#' + name.replace(' ', '-')).attr("stroke-width", 2);
-                               // $('#' + name.replace(' ', '-') + '-display').css({'width': '47.68%', 'left':'0'});
                                tooltip.style('display', 'none');
                             });
     grshrk = 0;                    
@@ -550,15 +536,10 @@ function LineChartInit() {
             tooltip.html(dateFormat(d[0]) + ', ' + parseInt(d[1]) + '%')
               .style('left', (d3.event.pageX + 3) + 'px')
               .style('top', (d3.event.pageY) + 'px');
-            // $('#' + name.replace(' ', '-') + '-display').css({'width': '50%', 'left':'25%'});
           })
           .on("mouseout", function(d, i) {
-            // if (i != lineData.length - 1) {
-            //  // tooltip.style('opacity', 0);
-            // }
               tooltip.style('display', 'none');
               d3.select('path#' + name.replace(' ', '-')).attr("stroke-width", 2);
-              // $('#' + name.replace(' ', '-') + '-display').css({'width': '47.68%', 'left':'0'});
           });;
 
         svgGroup.selectAll("circle")
