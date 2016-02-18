@@ -5,23 +5,108 @@
   <link rel="stylesheet" href="css/style.css">
 	<title>Document</title>
 </head>
+
 <body>
+
+  <div class="group">
+    <div class="right-side">
+      <input type="date" name="" id="bc-to-date"><br><br> -->
+      <span style="position:relative;left:75px;">
+        <input type="checkbox" class="bc-cb" id="bc-1a" checked>1a</checkbox>
+        <input type="checkbox" class="bc-cb" id="bc-1b" checked>1b</checkbox>
+        <input type="checkbox" class="bc-cb" id="bc-1c" checked>1c</checkbox><br><br>
+        <input type="checkbox" class="bc-cb" id="bc-2a" checked>2a</checkbox>
+        <input type="checkbox" class="bc-cb" id="bc-2b" checked>2b</checkbox>
+        <input type="checkbox" class="bc-cb" id="bc-2c" checked>2c</checkbox>
+      </span><br><br>
+      <span style="position:relative;left:75px;">
+        <input type="date" id="start-date-1" class="line-from" min="2015-08-17" value="2015-08-17"><br><br>
+        <input type="date" id="end-date-1" class="line-to"  min="2015-08-17"><br><br>
+        <input type="range" id="ptile-start" class="percentile" max="100" min="0" value="0"><span class="ptile-start-show">>=0%</span>
+        <br><button id="start-end-show">Start-End</button>
+      </span>
+
+    </div>
+    <div id="bc-visual">
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="right-side">
+      <div id="line-radio-group">
+        <input type="radio" name="ftype" value="start">Start of Time
+        <input type="radio" name="ftype" value="first" checked>First Time
+        <br><br>
+      </div>
+      <button id='all-button' class="line-chart-button">ALL</button>
+      <button id='lc-1a' class="line-chart-button">1a</button>
+      <button id='lc-1b' class="line-chart-button">1b</button>
+      <button id='lc-1c' class="line-chart-button">1c</button>
+      <button id='lc-2a' class="line-chart-button">2a</button>
+      <button id='lc-2b' class="line-chart-button">2b</button>
+      <button id='lc-2c' class="line-chart-button">2c</button><br><br>
+      <button id='lc-clear' class="line-chart-button">Clear</button><br><br>
+      <input type="date" class="line-from" min="2015-08-17" value="2015-08-17"><br><br>
+      <input type="date" class="line-to"  min="2015-08-17"><br><br>
+      <select name="lineNameSel" id="line-name-select"></select><br><br>
+      <input type="text" id="line-name" placeholder="type name, press enter"><br><br>
+    <div id="line-chart-names-display"></div>
+
+    </div>
+    <div id="lc-visual">
+       <svg id="#line-svg">
+       </svg>
+    </div>
+    <div id="auto-line-chart-names-display"></div>
+  </div>
+
+  <br>
 
 </body>
 
 <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
 <script>
 
+startDate = $('.line-from').val();
+endDate = new Date().toISOString().slice(0,10);
+$('.line-to').attr('max', endDate);
+$('.line-to').attr('max', endDate);
+$('.line-from').attr('max', endDate);
+$('.line-to').attr('value', endDate);
+
+data = $('#json-dump').html();
+$('#json-dump').remove();
+
+maparr = {};
+map = {};
+sortable = [];
+maxdays = -1;
+
 $.getJSON( "data.json", function(data) {
-  var items = [];
-  $.each( data, function( key, val ) {
-    items.push( "<li id='" + key + "'>" + val + "</li>" );
-  });
- 
-  $( "<ul/>", {
-    "class": "my-new-list",
-    html: items.join( "" )
-  }).appendTo( "body" );
+  function histoMap() {
+    maparr = {};
+    map = {};
+
+    for (var i = 0; i < data.length; i++) {
+        var names = data[i].names.split(', '); //split the CSVs
+        for (var j = 0; j < names.length; j++) {
+          names[j] = names[j].trim() + '(' + data[i].section + ')';
+          map[names[j]] = (map[names[j]] || 0) + 1;
+        }
+        if (i != 0 && data[i].date != data[i - 1].date) {
+          maparr[data[i].date] = map;
+        }
+    }
+    sortable = [];
+    for (var name in map) {
+      sortable.push([name, map[name]]);
+      maxdays = Math.max(maxdays, map[name]);
+    }
+    sortable.sort(function(a, b) {return a[0].localeCompare(b[0])});
+  }
+
+  histoMap();
+
 });
 
 </script>
