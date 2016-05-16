@@ -2,14 +2,16 @@ function DayWiseBarChartInit() {
 
   dwdata = [];
   for (var i = 0; i < data.length; i++) {
-    count = parseInt(data[i]['number']);
-    j = i + 1;
-    while (j < data.length && data[j]['date'] == data[i]['date']) {
-      count += parseInt(data[j]['number']);
-      j++;
+    if (data[i]['date'] < endDate) { 
+      count = parseInt(data[i]['number']);
+      j = i + 1;
+      while (j < data.length && data[j]['date'] == data[i]['date']) {
+        count += parseInt(data[j]['number']);
+        j++;
+      }
+      dwdata.push([data[i]['date'], count]);
+      i = j - 1;
     }
-    dwdata.push([data[i]['date'], count]);
-    i = j - 1;
   }
   dwdata.reverse();
 
